@@ -1,0 +1,25 @@
+S3Storage
+=========
+
+Still in alpha.
+
+This plugin is created for the Ruby on Rails framework and makes it really simple to 
+use Amazon S3 for storing your uploaded files. 
+
+You will need an account with Amazon Web Services http://aws.amazon.com/ 
+
+Installation
+============
+Install the Amazon gem first
+
+  sudo gem install aws-s3
+
+
+
+
+Example
+=======
+
+
+
+Copyright (c) 2008 David Svensson http://www.standout.se/, released under the MIT license
