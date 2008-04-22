@@ -34,19 +34,19 @@ by setting the bucket name to a domain name.
 I'll show some example code for a model called Document.
 
 Scaffold (command line):
-<code>ruby ./script/generate scaffold Document title:string, original_filename:string, content_type:string
-rake db:migrate</code>
+ruby ./script/generate scaffold Document title:string, original_filename:string, content_type:string
+rake db:migrate
 
 Model (app/models/document.rb):
-<code>class Document < ActiveRecord::Base
+class Document < ActiveRecord::Base
   s3_storage  :bucket => 'YOUR_BUCKET_NAME',
               :access_key => 'YOUR_ACCESS_KEY',
               :secret => 'YOUR_SECRET_KEY'
-end</code>
+end
 
 New document (app/views/document/new.html.erb):
 In your view, you'll need to have a form for uploading.
-<code><% form_tag ({:controller => 'documents', :action => 'create'}, {:multipart => true}) do %>
+<% form_tag ({:controller => 'documents', :action => 'create'}, {:multipart => true}) do %>
   <p>
     <label for="document_title">Title</label><br />
     <%= text_field :document, :title %>
@@ -56,16 +56,16 @@ In your view, you'll need to have a form for uploading.
     <%= file_field :document, :file %> <!-- this is the important part -->
   </p>
   <%= submit_tag "Upload file" %>
-<% end %></code>
+<% end %>
 
 List of documents (app/views/document/index.html.erb):
-<code><ul>
+<ul>
 <% for document in @documents %
   <li>
     <%= link_to document.title, document.s3_path %>
   </li>
 <% end %>
-</ul></code>
+</ul>
 
 That's it. Your uploaded files will now be stored in your Amazon S3 bucket.
 Files will be deleted from Amazon S3 when you delete the object as usual in rails.
