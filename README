@@ -14,12 +14,61 @@ Install the Amazon gem first
 
   sudo gem install aws-s3
 
+Then you can install the plugin itself:
+
+  ruby ./script/install plugin git://github.com/standout/s3storage.git
+
+Your model needs to have the following fields for this to work.
+
+  - original_filename
+  - content_type
 
 
-
-Example
+Usage
 =======
 
+The plugin will create your bucket automatically if it does not already exist. 
+Remember that bucket names must be unique across all of S3. I usually get around this
+by setting the bucket name to a domain name.
 
+I'll show some example code for a model called Document.
 
+Scaffold (command line):
+<code>ruby ./script/generate scaffold Document title:string, original_filename:string, content_type:string
+rake db:migrate</code>
+
+Model (app/models/document.rb):
+<code>class Document < ActiveRecord::Base
+  s3_storage  :bucket => 'YOUR_BUCKET_NAME',
+              :access_key => 'YOUR_ACCESS_KEY',
+              :secret => 'YOUR_SECRET_KEY'
+end</code>
+
+New document (app/views/document/new.html.erb):
+In your view, you'll need to have a form for uploading.
+<code><% form_tag ({:controller => 'documents', :action => 'create'}, {:multipart => true}) do %>
+  <p>
+    <label for="document_title">Title</label><br />
+    <%= text_field :document, :title %>
+  </p>
+  <p>
+    <label for="document_file">Pick a file to upload</label><br />
+    <%= file_field :document, :file %> <!-- this is the important part -->
+  </p>
+  <%= submit_tag "Upload file" %>
+<% end %></code>
+
+List of documents (app/views/document/index.html.erb):
+<code><ul>
+<% for document in @documents %
+  <li>
+    <%= link_to document.title, document.s3_path %>
+  </li>
+<% end %>
+</ul></code>
+
+That's it. Your uploaded files will now be stored in your Amazon S3 bucket.
+Files will be deleted from Amazon S3 when you delete the object as usual in rails.
+
+-------
 Copyright (c) 2008 David Svensson http://www.standout.se/, released under the MIT license

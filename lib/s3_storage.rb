@@ -73,6 +73,8 @@ module Standout
           end
         end
 
+        # Tries to remove the file. Since the file could be removed manually 
+        # it fails with only a log message that the file could not be removed.
         def remove_file_from_s3
           connect_to_s3
           if AWS::S3::S3Object.exists? "#{self.id}/#{self.original_filename}", self.configuration[:bucket]
@@ -81,10 +83,9 @@ module Standout
           else
             logger.info "File could not be found on S3, and therefore not removed."
           end
-        #rescue
-         # logger.info "Warning: File (#{self.original_filename}) could not be removed from S3."
         end
 
+        # See if the S3 bucket does exist. If not, create it.
         def check_if_bucket_exists
           unless AWS::S3::Service.buckets.include?(self.configuration[:bucket])
             logger.info "Created bucket #{self.configuration[:bucket]}"
