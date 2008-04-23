@@ -56,7 +56,7 @@ module Standout
 
         def save_the_file_to_s3
           if @file.nil?
-            logger.warning "Error: File not attached?"
+            logger.info "Error: File not attached?"
             self.destroy
           else
             logger.info "Uploading to S3: #{@file.original_filename}"

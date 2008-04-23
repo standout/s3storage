@@ -16,7 +16,11 @@ Install the Amazon gem first
 
 Then you can install the plugin itself:
 
-  ruby ./script/install plugin git://github.com/standout/s3storage.git
+  ruby ./script/plugin install git://github.com/standout/s3storage.git
+
+If you get a 'Not found' message, you probably don't have the latest version of 
+rails. You could grab the plugin manually from http://github.com/standout/s3storage/tarball/master
+and extract it into your vendor/plugins folder. 
 
 Your model needs to have the following fields for this to work.
 
@@ -46,14 +50,14 @@ end
 
 New document (app/views/document/new.html.erb):
 In your view, you'll need to have a form for uploading.
-<% form_tag ({:controller => 'documents', :action => 'create'}, {:multipart => true}) do %>
+<% form_for(@document, :html => {:multipart => true}) do |f| %>
   <p>
     <label for="document_title">Title</label><br />
-    <%= text_field :document, :title %>
+    <%= f.text_field :title %>
   </p>
   <p>
-    <label for="document_file">Pick a file to upload</label><br />
-    <%= file_field :document, :file %> <!-- this is the important part -->
+    <label for="document_file">Select a file to upload</label><br />
+    <%= f.file_field :file %>
   </p>
   <%= submit_tag "Upload file" %>
 <% end %>
